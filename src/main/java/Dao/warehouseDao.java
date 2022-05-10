@@ -12,6 +12,6 @@ public class warehouseDao extends AbstractDao<Warehouse> implements DaoInterface
 
     @Override
     public List<Warehouse> findAll() {
-        return super.finAll(Warehouse.class);
+        return super.findAll(Warehouse.class,1);
     }
 }

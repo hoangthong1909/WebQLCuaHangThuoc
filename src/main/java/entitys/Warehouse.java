@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -23,4 +24,7 @@ public class Warehouse {
 
     @Column(name = "status")
     private Integer status;
+
+    @OneToMany(mappedBy = "idWarehouse")
+    private List<DetailedWarehouse> entityList;
 }

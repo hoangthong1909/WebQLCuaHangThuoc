@@ -17,6 +17,6 @@ public class ShopDao extends AbstractDao<Shop> implements DaoInterface<Shop> {
     }
 
     public Shop findByIDchuCH(Integer id) {
-        return super.findOne(Shop.class, "SELECT obj from Shop obj where obj.idChuCH.id" + "" + "= ?0", id);
+        return super.findOne(Shop.class, "SELECT obj from Shop obj where obj.idChuCH.id= ?0", id);
     }
 }

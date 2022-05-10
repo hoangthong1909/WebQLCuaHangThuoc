@@ -17,6 +17,7 @@
                         <th>Loại Thuốc</th>
                         <th>Tên Thuốc</th>
                         <th>Dạng</th>
+                        <th></th>
                         </thead>
                         <tbody>
                         <c:forEach items="${listDetailPlanTam}" var="ctPlan" varStatus="status">
@@ -25,6 +26,7 @@
                                 <td>${ctPlan.idDrug.idType.name}</td>
                                 <td>${ctPlan.idDrug.name}</td>
                                 <td>${ctPlan.idDrug.idForm.name}</td>
+                                <td><a class="btn btn-danger" href="/Plan/remove?id=${ctPlan.idDrug.id}">Xóa</a></td>
                             </tr>
                         </c:forEach>
                         </tbody>
@@ -102,6 +104,32 @@
                             </c:forEach>
                         </td>
                         <td>${plan.content}</td>
+                        <td>
+                            <button data-toggle="modal" data-target="#b${plan.id}" class="btn btn-danger">Xóa</button>
+                        </td>
+                        <div id="b${plan.id}" class="modal" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title">Xác nhận</h3>
+                                        <button type="button" class="btn-close" data-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h5>Bạn muốn xóa Kế Hoạch ${plan.id} ?</h5>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form action="/Plan/delete" method="post">
+                                            <input type="hidden" value="${plan.id}" name="id">
+                                            <button class="btn btn-danger">Xóa</button>
+                                        </form>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                                aria-label="Close">Hủy
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </tr>
                     </c:forEach>
                     </tbody>

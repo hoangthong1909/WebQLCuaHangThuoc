@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@WebServlet({"/Plan/index", "/Plan/sup", "/Plan/create", "/Plan/store", "/Plan/edit", "/Plan/update", "/Plan/delete",})
+@WebServlet({"/Plan/index","/Plan/remove", "/Plan/create", "/Plan/store", "/Plan/edit", "/Plan/update", "/Plan/delete",})
 public class PlanServlet extends HttpServlet {
     private drugDao drugDao;
     private planDao planDao;
@@ -34,11 +34,10 @@ public class PlanServlet extends HttpServlet {
         String uri = request.getRequestURI();
         if (uri.contains("index")) {
             index(request, response);
-        } else if (uri.contains("sup")) {
-            sup(request, response);
-        } else if (uri.contains("edit")) {
+        }  else if (uri.contains("edit")) {
             edit(request, response);
-        } else {
+        } else if (uri.contains("remove")){
+            this.deleteHD(request, response);
             //404
         }
     }
@@ -56,17 +55,12 @@ public class PlanServlet extends HttpServlet {
     }
 
     private void index(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session=request.getSession();
         List<Drug> drugList = this.drugDao.findAll();
-//        User chuShop= (User) session.getAttribute("sessionUser");
-//        request.setAttribute("chuShop",chuShop);
-        List<Shop> shopList = this.shopDao.findAll();
         List<Plan> listPlan = this.planDao.findAll();
-        request.setAttribute("dsShop", shopList);
         request.setAttribute("drugList", drugList);
         request.setAttribute("dsPlan", listPlan);
         request.setAttribute("listDetailPlanTam", this.listDetailPlanTam);
-        request.setAttribute("view1", "/views/plan/index.jsp");
+        request.setAttribute("view", "/views/plan/index.jsp");
         request.getRequestDispatcher("/views/layout.jsp").forward(request, response);
     }
 
@@ -78,6 +72,7 @@ public class PlanServlet extends HttpServlet {
             for (DetailPlan ct : this.listDetailPlanTam) {
                 if (ct.getIdDrug().getId() == id) {
                     check++;
+                    ct.setQuantity(ct.getQuantity()+1);
                 }
             }
         }
@@ -87,6 +82,22 @@ public class PlanServlet extends HttpServlet {
             detailPlan.setQuantity(1);
             detailPlan.setIdDrug(drug);
             this.listDetailPlanTam.add(detailPlan);
+        }
+        response.sendRedirect("/Plan/index");
+    }
+    private void deleteHD(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String s = request.getParameter("id");
+        int id = Integer.parseInt(s);
+        if (listDetailPlanTam.size() > 0) {
+            for (DetailPlan ct : this.listDetailPlanTam) {
+                if (ct.getIdDrug().getId() == id) {
+                    listDetailPlanTam.remove(ct);
+                    break;
+                }
+            }
+        }
+        if (listDetailPlanTam.isEmpty()){
+            listDetailPlanTam.clear();
         }
         response.sendRedirect("/Plan/index");
     }
