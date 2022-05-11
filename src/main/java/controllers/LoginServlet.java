@@ -5,27 +5,20 @@ import entitys.User;
 import org.apache.commons.beanutils.BeanUtils;
 import utils.EncryptUtil;
 import utils.XCookie;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Consumer;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
-import javax.servlet.http.Part;
-import java.io.File;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
+import java.util.Random;
 
 @WebServlet(name = "loginServlet", value = {"/login","/register", "/signout", "/forgot", "/send"})
 public class LoginServlet extends HttpServlet {
@@ -37,7 +30,7 @@ public class LoginServlet extends HttpServlet {
     private static final String ALL = alpha + alphaUpperCase + digits + specials;
     private UserDao userDao;
     private static Random generator = new Random();
-    String username = "anhthong645@gmail.com";
+    String username = "vanthanhtvph15016@gmail.com";
     String messgare = "";
 
     public LoginServlet() {
@@ -179,14 +172,20 @@ public class LoginServlet extends HttpServlet {
                 request.setAttribute("message", "Tài khoản hoặc mật khẩu không chính xác!");
                 request.getRequestDispatcher("/views/account/login.jsp").forward(request, response);
             } else {
-                if (request.getParameter("remember") != null) {
-                    XCookie.add(response, "user_remmeber",String.valueOf(u.getId()), 600);
+                if (u.getStatus()==1){
+                    if (request.getParameter("remember") != null) {
+                        XCookie.add(response, "user_remmeber",String.valueOf(u.getId()), 600);
+                    }
+                    request.getServletContext().setAttribute("sessionUser", u);
+                    request.getSession().setAttribute("sessionUser", u);
+                    request.setAttribute("result", "success");
+                    request.setAttribute("message", "Đăng nhập thành công, bạn sẽ được di chuyển về trang chủ!");
+                    request.getRequestDispatcher("/views/account/login.jsp").forward(request, response);
+                }else {
+                    request.setAttribute("result", "error");
+                    request.setAttribute("message", "Tài khoản này đã bị xóa hoặc khóa rồi!");
                 }
-                request.getServletContext().setAttribute("sessionUser", u);
-                request.getSession().setAttribute("sessionUser", u);
-                request.setAttribute("result", "success");
-                request.setAttribute("message", "Đăng nhập thành công, bạn sẽ được di chuyển về trang chủ!");
-                request.getRequestDispatcher("/views/account/login.jsp").forward(request, response);
+
             }
         }
     }

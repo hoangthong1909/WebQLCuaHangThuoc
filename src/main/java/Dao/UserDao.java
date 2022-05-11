@@ -1,9 +1,7 @@
 package Dao;
 
-import entitys.Shop;
 import entitys.User;
 
-import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class UserDao extends AbstractDao<User> implements DaoInterface<User>{
@@ -17,12 +15,12 @@ public class UserDao extends AbstractDao<User> implements DaoInterface<User>{
     public List<User> findAll() {
         return super.findAllUser(User.class,1);
     }
-    public List<User> findChuCH() {
-        return super.findChuCH(User.class,1);
-    }
     public User findByEmail(String email){
         String jpql = "SELECT o FROM User o Where o.email =?0";
         return super.findOne(User.class,jpql,email);
+    }
+    public List<User> findChuCH() {
+        return super.findChuCH(User.class,1);
     }
     public User findByPhone(String phone){
         String jpql = "SELECT o FROM User o Where o.sdt =?0";

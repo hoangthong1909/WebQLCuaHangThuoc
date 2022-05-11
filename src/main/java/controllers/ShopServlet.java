@@ -32,6 +32,7 @@ public class ShopServlet extends HttpServlet {
         request.setCharacterEncoding("utf-8");
         response.setCharacterEncoding("utf-8");
         String uri = request.getRequestURI();
+        request.setAttribute("uri",2);
         if (uri.contains("/Shop/index")) {
             this.create(request, response);
         }
@@ -41,6 +42,7 @@ public class ShopServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
         response.setCharacterEncoding("utf-8");
+        request.setAttribute("uri",2);
         String uri = request.getRequestURI();
         if (uri.contains("/Shop/store")) {
             this.store(request, response);
@@ -70,7 +72,7 @@ public class ShopServlet extends HttpServlet {
                     t=u;
                 }
             }
-        dsChuCH.remove(t);
+            dsChuCH.remove(t);
         }
         if (dsChuCH.isEmpty()){
             session.setAttribute("error","Vui Lòng Thêm Mới Chủ Cửa Hàng");

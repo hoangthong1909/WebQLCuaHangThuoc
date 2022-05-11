@@ -3,6 +3,7 @@ package entitys;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 
@@ -21,6 +22,7 @@ public class DetailPlan {
     @JoinColumn(name = "idPlan")
     private Plan idPlan;
 
+    @Cascade({org.hibernate.annotations.CascadeType.REFRESH})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idDrug")
     private Drug idDrug;
@@ -28,8 +30,4 @@ public class DetailPlan {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @Override
-    public String toString() {
-        return "DetailPlan{}";
-    }
 }

@@ -27,6 +27,7 @@ public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
         response.setCharacterEncoding("utf-8");
+        request.setAttribute("uri",1);
         String uri = request.getRequestURI();
         if (uri.contains("/User/index")) {
             this.create(request, response);
@@ -38,6 +39,7 @@ public class UserServlet extends HttpServlet {
         request.setCharacterEncoding("utf-8");
         response.setCharacterEncoding("utf-8");
         String uri = request.getRequestURI();
+        request.setAttribute("uri",1);
         if (uri.contains("/User/store")) {
             this.store(request, response);
         } else if (uri.contains("/User/update")) {

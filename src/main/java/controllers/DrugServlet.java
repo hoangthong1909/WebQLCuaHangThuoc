@@ -1,19 +1,21 @@
 package controllers;
+
 import Dao.drugDao;
 import Dao.formdrugDao;
 import Dao.typedrugDao;
 import entitys.Drug;
 import entitys.FormDrug;
 import entitys.TypeDrug;
-import entitys.User;
 import org.apache.commons.beanutils.BeanUtils;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
-import java.io.File;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +36,7 @@ public class DrugServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
         response.setCharacterEncoding("utf-8");
+        request.setAttribute("uri",6);
         String uri = request.getRequestURI();
         if (uri.contains("/Drug/index")) {
             this.create(request, response);
@@ -45,6 +48,7 @@ public class DrugServlet extends HttpServlet {
         request.setCharacterEncoding("utf-8");
         response.setCharacterEncoding("utf-8");
         String uri = request.getRequestURI();
+        request.setAttribute("uri",6);
         if (uri.contains("/Drug/store")) {
             this.store(request, response);
         } else if (uri.contains("/Drug/update")) {

@@ -14,4 +14,8 @@ public class billDao extends AbstractDao<Bill> implements DaoInterface<Bill>{
     public List<Bill> findAll() {
         return super.finAll(Bill.class);
     }
+
+    public List<Bill> findShop(Integer id){
+        return super.findMany(Bill.class,"SELECT o FROM Bill o WHERE o.idShop.id =?0",id);
+    }
 }

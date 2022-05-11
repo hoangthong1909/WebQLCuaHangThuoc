@@ -1,7 +1,6 @@
 package Dao;
 
 import entitys.DetailPlan;
-import entitys.DetailedWarehouse;
 
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -16,7 +15,6 @@ public class detailPlanDao extends AbstractDao<DetailPlan> implements DaoInterfa
     public List<DetailPlan> findAll() {
         return super.finAll(DetailPlan.class);
     }
-
     public int deleteList(List<DetailPlan> entitys) throws Exception{
         int i =0;
         try {

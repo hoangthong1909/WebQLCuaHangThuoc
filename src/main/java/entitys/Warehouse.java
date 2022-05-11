@@ -3,6 +3,7 @@ package entitys;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.List;
@@ -25,6 +26,12 @@ public class Warehouse {
     @Column(name = "status")
     private Integer status;
 
+    @Cascade({org.hibernate.annotations.CascadeType.REFRESH})
     @OneToMany(mappedBy = "idWarehouse")
     private List<DetailedWarehouse> entityList;
+
+    @Override
+    public String toString() {
+        return "Warehouse{}";
+    }
 }

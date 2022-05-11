@@ -14,4 +14,8 @@ public class detailBillDao extends AbstractDao<DetailBill> implements DaoInterfa
     public List<DetailBill> findAll() {
         return super.finAll(DetailBill.class);
     }
+
+    public List<DetailBill> findBill(Integer id){
+        return super.findMany(DetailBill.class,"SELECT o FROM DetailBill o WHERE o.idBill.id = ?0",id);
+    }
 }

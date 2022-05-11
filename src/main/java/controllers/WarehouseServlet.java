@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@WebServlet({"/Warehouse/index","/Warehouse/remove","/Warehouse/sup","/Warehouse/show","/Warehouse/create", "/Warehouse/store", "/Warehouse/edit", "/Warehouse/update", "/Warehouse/delete",})
+@WebServlet({"/Warehouse/index", "/Warehouse/remove", "/Warehouse/sup", "/Warehouse/show", "/Warehouse/create", "/Warehouse/store", "/Warehouse/edit", "/Warehouse/update", "/Warehouse/delete",})
 public class WarehouseServlet extends HttpServlet {
     private drugDao drugDao;
     private warehouseDao warehouseDao;
@@ -33,14 +33,14 @@ public class WarehouseServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String uri = request.getRequestURI();
+        request.setAttribute("uri", 5);
         if (uri.contains("index")) {
             index(request, response);
-        }  else if (uri.contains("edit")) {
+        } else if (uri.contains("edit")) {
             edit(request, response);
-        }else if (uri.contains("sup")){
+        } else if (uri.contains("sup")) {
             this.sup(request, response);
-        }
-        else if (uri.contains("remove")){
+        } else if (uri.contains("remove")) {
             this.deleteHD(request, response);
             //404
         }
@@ -50,13 +50,14 @@ public class WarehouseServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html; charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
+        request.setAttribute("uri", 5);
         String uri = request.getRequestURI();
         if (uri.contains("store")) {
             store(request, response);
-        }  else if (uri.contains("delete")) {
+        } else if (uri.contains("delete")) {
             delete(request, response);
-        }else if (uri.contains("show")){
-            this.show(request,response);
+        } else if (uri.contains("show")) {
+            this.show(request, response);
         }
     }
 
@@ -65,17 +66,18 @@ public class WarehouseServlet extends HttpServlet {
         request.setAttribute("view", "/views/warehouse/index.jsp");
         request.getRequestDispatcher("/views/layout.jsp").forward(request, response);
     }
+
     private void listAll(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Drug> drugList = this.drugDao.findAll();
         request.setAttribute("drugList", drugList);
-        HttpSession session=request.getSession();
-        User user= (User) session.getAttribute("sessionUser");
-        if (user.getIsAdmin()==1){
-            Shop shop=this.shopDao.findByIDchuCH(user.getId());
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("sessionUser");
+        if (user.getIsAdmin() == 1) {
+            Shop shop = this.shopDao.findByIDchuCH(user.getId());
             List<Warehouse> listWarehouse = this.warehouseDao.findByWarehouseCH(shop.getId());
             request.setAttribute("dsWarehouse", listWarehouse);
-        }else if (user.getIsAdmin()==2){
-            Shop shop=this.shopDao.findByIDchuCH(user.getUserAdd());
+        } else if (user.getIsAdmin() == 2) {
+            Shop shop = this.shopDao.findByIDchuCH(user.getUserAdd());
             List<Warehouse> listWarehouse = this.warehouseDao.findByWarehouseCH(shop.getId());
             request.setAttribute("dsWarehouse", listWarehouse);
         }
@@ -90,7 +92,7 @@ public class WarehouseServlet extends HttpServlet {
             for (DetailedWarehouse ct : this.listDetailWarehouseTam) {
                 if (ct.getIdDrug().getId() == id) {
                     check++;
-                    ct.setQuantity(ct.getQuantity()+1);
+                    ct.setQuantity(ct.getQuantity() + 1);
                 }
             }
         }
@@ -103,6 +105,7 @@ public class WarehouseServlet extends HttpServlet {
         }
         response.sendRedirect("/Warehouse/index");
     }
+
     private void deleteHD(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String s = request.getParameter("id");
         int id = Integer.parseInt(s);
@@ -114,8 +117,9 @@ public class WarehouseServlet extends HttpServlet {
                 }
             }
         }
-        if (listDetailWarehouseTam.isEmpty()){
-            ;listDetailWarehouseTam.clear();
+        if (listDetailWarehouseTam.isEmpty()) {
+            ;
+            listDetailWarehouseTam.clear();
         }
         response.sendRedirect("/Warehouse/index");
     }
@@ -125,16 +129,53 @@ public class WarehouseServlet extends HttpServlet {
         HttpSession session = request.getSession();
         try {
             Warehouse warehouse = new Warehouse();
-            User chuShop= (User) session.getAttribute("sessionUser");
-            Shop shop = this.shopDao.findByIDchuCH(chuShop.getId());
-            warehouse.setIdShop(shop);
-            warehouse.setStatus(1);
-            Warehouse soHD = this.warehouseDao.create(warehouse);
-            for (DetailedWarehouse detailedWarehouse : this.listDetailWarehouseTam) {
-                detailedWarehouse.setIdWarehouse(soHD);
-                detailedWarehouse.setDateAdded(new Date(new java.util.Date().getTime()));
-                detailedWarehouse.setDateEnd(DateUtil.addDays(new java.util.Date(),detailedWarehouse.getIdDrug().getTerm()));
-                this.detailedWarehouseDao.create(detailedWarehouse);
+            User user = (User) session.getAttribute("sessionUser");
+            Shop shop = new Shop();
+            if (user.getIsAdmin() == 1) {
+                shop = this.shopDao.findByIDchuCH(user.getId());
+            } else if (user.getIsAdmin() == 2) {
+                shop = this.shopDao.findByIDchuCH(user.getUserAdd());
+            }
+            Warehouse warehouse1 = this.warehouseDao.findWarehouseUpdate(shop.getId());
+            if (warehouse1 == null) {
+                warehouse.setIdShop(shop);
+                warehouse.setStatus(1);
+                Warehouse soHD = this.warehouseDao.create(warehouse);
+                for (DetailedWarehouse detailedWarehouse : this.listDetailWarehouseTam) {
+                    detailedWarehouse.setIdWarehouse(soHD);
+                    detailedWarehouse.setDateAdded(new Date(new java.util.Date().getTime()));
+                    detailedWarehouse.setDateEnd(DateUtil.addDays(new java.util.Date(), detailedWarehouse.getIdDrug().getTerm()));
+                    this.detailedWarehouseDao.create(detailedWarehouse);
+                }
+            } else {
+                int check = 0;
+                List<DetailedWarehouse> list = new ArrayList<>();
+                List<DetailedWarehouse> detailedWarehouse = this.detailedWarehouseDao.findByIDWarehouse(warehouse1.getId());
+                Warehouse ware= new Warehouse();
+                for (DetailedWarehouse ct : this.listDetailWarehouseTam) {
+                    for (DetailedWarehouse detail : detailedWarehouse) {
+                        ware=detail.getIdWarehouse();
+                        if (ct.getIdDrug().getId() == detail.getIdDrug().getId()) {
+                            detail.setQuantity(detail.getQuantity() + ct.getQuantity());
+                            detail.setDateAdded(new Date(new java.util.Date().getTime()));
+                            detail.setDateEnd(DateUtil.addDays(new java.util.Date(), detail.getIdDrug().getTerm()));
+                            list.add(detail);
+                            check++;
+                        }
+                        this.detailedWarehouseDao.update(detail);
+                    }
+                }
+                if (check!=this.listDetailWarehouseTam.size()){
+                    List<DetailedWarehouse> ds = this.listDetailWarehouseTam;
+                    ds.removeAll(list);
+                    for (DetailedWarehouse o : ds) {
+                        o.setIdWarehouse(ware);
+                        o.setDateAdded(new Date(new java.util.Date().getTime()));
+                        o.setDateEnd(DateUtil.addDays(new java.util.Date(), o.getIdDrug().getTerm()));
+                        System.out.println(o.getIdWarehouse().getId());
+                        this.detailedWarehouseDao.create(o);
+                    }
+                }
             }
             session.setAttribute("message", "Thêm Mới Thành Công");
             this.listDetailWarehouseTam.clear();
@@ -185,12 +226,13 @@ public class WarehouseServlet extends HttpServlet {
             e.printStackTrace();
         }
     }
+
     private void show(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id= Integer.parseInt(request.getParameter("id"));
-        List<DetailedWarehouse> detailedWarehouseList=this.detailedWarehouseDao.findByIDWarehouse(id);
-        request.setAttribute("list",detailedWarehouseList);
-        request.setAttribute("view","/views/warehouse/detail.jsp");
-        request.getRequestDispatcher("/views/layout.jsp").forward(request,response);
+        int id = Integer.parseInt(request.getParameter("id"));
+        List<DetailedWarehouse> detailedWarehouseList = this.detailedWarehouseDao.findByIDWarehouse(id);
+        request.setAttribute("list", detailedWarehouseList);
+        request.setAttribute("view", "/views/warehouse/detail.jsp");
+        request.getRequestDispatcher("/views/layout.jsp").forward(request, response);
 
     }
 }

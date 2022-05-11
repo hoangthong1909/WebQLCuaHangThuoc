@@ -31,7 +31,7 @@
                     <tr>
                         <td>#${status.count}</td>
                         <td>${planList.idCuaHang.name}</td>
-                        <td>CH${planList.name}</td>
+                        <td>${planList.name}</td>
                         <td>
                             <c:forEach items="${planList.entityList}" var="ct">
                                 ${ct.idDrug.name},

@@ -82,7 +82,7 @@
                 <c:if test="${result =='success'}">
                     <script type="text/javascript">
                         setTimeout(()=>{
-                            window.location.replace("http://localhost:8080/Plan/index");
+                            window.location.replace("http://localhost:8080/User/index");
                         }, 2000);
                     </script>
                 </c:if>
@@ -105,7 +105,6 @@
         </div>
     </div>
 </div>
-
 
 <script src="../js/login.js"></script>
 </body>

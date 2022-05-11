@@ -1,22 +1,23 @@
 package Dao;
 
-import entitys.DetailPlan;
 import entitys.DetailedWarehouse;
 
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-public class detailedWarehouseDao extends AbstractDao<DetailedWarehouse> implements DaoInterface<DetailedWarehouse> {
+public class detailedWarehouseDao extends AbstractDao<DetailedWarehouse> implements DaoInterface<DetailedWarehouse>{
     @Override
     public DetailedWarehouse findById(Integer id) {
-        return super.findById(DetailedWarehouse.class, id);
+        return super.findById(DetailedWarehouse.class,id);
     }
 
     @Override
     public List<DetailedWarehouse> findAll() {
         return super.finAll(DetailedWarehouse.class);
     }
-
+    public List<DetailedWarehouse> findShop(Integer id){
+        return super.findMany(DetailedWarehouse.class,"SELECT o FROM DetailedWarehouse o WHERE o.idWarehouse.idShop.id =?0",id);
+    }
     public int deleteList(List<DetailedWarehouse> entitys) throws Exception {
         int i = 0;
         try {
@@ -41,5 +42,4 @@ public class detailedWarehouseDao extends AbstractDao<DetailedWarehouse> impleme
         List<DetailedWarehouse> list=query.getResultList();
         return list;
     }
-
 }

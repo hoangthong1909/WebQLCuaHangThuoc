@@ -35,5 +35,8 @@ public class DetailedWarehouse {
     @JoinColumn(name = "idWarehouse")
     private Warehouse idWarehouse;
 
-
+    @Override
+    public String toString() {
+        return "DetailedWarehouse{}";
+    }
 }

@@ -1,6 +1,5 @@
 package Dao;
 
-import entitys.Plan;
 import entitys.TypeDrug;
 
 import java.util.List;

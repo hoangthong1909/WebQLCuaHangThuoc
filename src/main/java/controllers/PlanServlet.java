@@ -32,6 +32,7 @@ public class PlanServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String uri = request.getRequestURI();
+        request.setAttribute("uri",4);
         if (uri.contains("index")) {
             index(request, response);
         } else if (uri.contains("edit")) {
@@ -51,6 +52,7 @@ public class PlanServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html; charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
+        request.setAttribute("uri",4);
         String uri = request.getRequestURI();
         if (uri.contains("store")) {
             store(request, response);
