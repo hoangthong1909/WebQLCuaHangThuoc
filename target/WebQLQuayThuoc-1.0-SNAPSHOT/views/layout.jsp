@@ -161,7 +161,6 @@
     </div>
 </div>
 </c:forEach>
-<!-- Mini Modal -->
 <c:forEach items="${planList}" var="planList" varStatus="status">
 <div class="modal fade modal-mini modal-primary" id="ea${planList.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -210,10 +209,11 @@
                     <h3 class="modal-title">Xác nhận</h3>
                 </div>
                 <div class="modal-body">
-                    <input type="text" name="soLuong">
                 </div>
                 <div class="modal-footer">
-                    <form action="/Plan/updateSL" method="post">
+                    <form action="/Plan/updateSL" method="post"
+                    <lable>Nhập Số Lượng</lable>
+                    <input type="text" name="soLuong">
                         <input type="hidden" value="${ct.id}" name="id">
                         <button class="btn btn-success">Cập Nhât</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal"
@@ -240,6 +240,7 @@
                 </a>
             </div>
             <ul class="nav">
+                <c:if test="${sessionScope.sessionUser.isAdmin ==0}">
                 <li class="
                     <c:if test="${uri==1}">
                         active
@@ -258,12 +259,31 @@
                         <p>Shop</p>
                     </a>
                 </li>
-                <li class="<c:if test="${uri==3}">
+                    <li class="<c:if test="${uri==3}">
                         active
                     </c:if>">
-                    <a href="/Bill/index">
+                        <a href="/Plan/show">
+                            <i class="pe-7s-news-paper"></i>
+                            <p>Plan</p>
+                        </a>
+                    </li>
+                    <li class="<c:if test="${uri==6}">
+                        active
+                    </c:if>">
+                        <a href="/Drug/index">
+                            <i class="pe-7s-drop"></i>
+                            <p>Drug</p>
+                        </a>
+                    </li>
+                </c:if>
+
+            <c:if test="${sessionScope.sessionUser.isAdmin ==1}">
+            <li class="<c:if test="${uri==1}">
+                        active
+                    </c:if>">
+                    <a href="/User/index">
                         <i class="pe-7s-note2"></i>
-                        <p>Bill</p>
+                        <p>User</p>
                     </a>
                 </li>
                 <li class="<c:if test="${uri==4}">
@@ -282,15 +302,27 @@
                         <p>Warehouse</p>
                     </a>
                 </li>
-                <li class="<c:if test="${uri==6}">
+                <li class="<c:if test="${uri==3}">
                         active
                     </c:if>">
-                    <a href="/Drug/index">
+                    <a href="/Bill/index">
                         <i class="pe-7s-drop"></i>
-                        <p>Drug</p>
+                        <p>Bill</p>
                     </a>
                 </li>
-            </ul>
+            </c:if>
+            <c:if test="${sessionScope.sessionUser.isAdmin ==2}">
+                <li class="<c:if test="${uri==3}">
+                        active
+                    </c:if>">
+                    <a href="/Bill/index">
+                        <i class="pe-7s-drop"></i>
+                        <p>Bill</p>
+                    </a>
+                </li>
+            </c:if>
+
+</ul>
         </div>
     </div>
 
