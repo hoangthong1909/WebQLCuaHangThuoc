@@ -32,4 +32,9 @@ public class Plan {
     private Integer status;
     @OneToMany(mappedBy = "idPlan")
     private List<DetailPlan> entityList;
+
+    @Override
+    public String toString() {
+        return "Plan{}";
+    }
 }

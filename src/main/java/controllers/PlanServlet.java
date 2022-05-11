@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@WebServlet({"/Plan/index","/Plan/remove", "/Plan/create", "/Plan/store", "/Plan/edit", "/Plan/update", "/Plan/delete",})
+@WebServlet({"/Plan/index", "/Plan/remove", "/Plan/create", "/Plan/store", "/Plan/edit", "/Plan/update", "/Plan/delete", "/Plan/show", "/Plan/confirm", "/Plan/cancel", "/Plan/showDetail", "/Plan/updateSL"})
 public class PlanServlet extends HttpServlet {
     private drugDao drugDao;
     private planDao planDao;
@@ -34,11 +34,16 @@ public class PlanServlet extends HttpServlet {
         String uri = request.getRequestURI();
         if (uri.contains("index")) {
             index(request, response);
-        }  else if (uri.contains("edit")) {
+        } else if (uri.contains("edit")) {
             edit(request, response);
-        } else if (uri.contains("remove")){
+        } else if (uri.contains("remove")) {
             this.deleteHD(request, response);
-            //404
+        } else if (uri.contains("show")) {
+            this.show(request, response);
+        } else if (uri.contains("confirm")) {
+            this.confirm(request, response);
+        } else if (uri.contains("cancel")) {
+            this.cancel(request, response);
         }
     }
 
@@ -49,8 +54,12 @@ public class PlanServlet extends HttpServlet {
         String uri = request.getRequestURI();
         if (uri.contains("store")) {
             store(request, response);
-        }  else if (uri.contains("delete")) {
+        } else if (uri.contains("delete")) {
             delete(request, response);
+        } else if (uri.contains("showDetail")) {
+            showDetail(request, response);
+        }else if (uri.contains("updateSL")) {
+            this.updateSL(request, response);
         }
     }
 
@@ -59,17 +68,18 @@ public class PlanServlet extends HttpServlet {
         request.setAttribute("view", "/views/plan/index.jsp");
         request.getRequestDispatcher("/views/layout.jsp").forward(request, response);
     }
+
     private void listAll(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Drug> drugList = this.drugDao.findAll();
         request.setAttribute("drugList", drugList);
-        HttpSession session=request.getSession();
-        User user= (User) session.getAttribute("sessionUser");
-        if (user.getIsAdmin()==1){
-            Shop shop=this.shopDao.findByIDchuCH(user.getId());
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("sessionUser");
+        if (user.getIsAdmin() == 1) {
+            Shop shop = this.shopDao.findByIDchuCH(user.getId());
             List<Plan> listPlan = this.planDao.findByPlanCH(shop.getId());
             request.setAttribute("dsPlan", listPlan);
-        }else if (user.getIsAdmin()==2){
-            Shop shop=this.shopDao.findByIDchuCH(user.getUserAdd());
+        } else if (user.getIsAdmin() == 2) {
+            Shop shop = this.shopDao.findByIDchuCH(user.getUserAdd());
             List<Plan> listPlan = this.planDao.findByPlanCH(shop.getId());
             request.setAttribute("dsPlan", listPlan);
         }
@@ -84,7 +94,7 @@ public class PlanServlet extends HttpServlet {
             for (DetailPlan ct : this.listDetailPlanTam) {
                 if (ct.getIdDrug().getId() == id) {
                     check++;
-                    ct.setQuantity(ct.getQuantity()+1);
+                    ct.setQuantity(ct.getQuantity() + 1);
                 }
             }
         }
@@ -97,6 +107,7 @@ public class PlanServlet extends HttpServlet {
         }
         response.sendRedirect("/Plan/index");
     }
+
     private void deleteHD(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String s = request.getParameter("id");
         int id = Integer.parseInt(s);
@@ -108,7 +119,7 @@ public class PlanServlet extends HttpServlet {
                 }
             }
         }
-        if (listDetailPlanTam.isEmpty()){
+        if (listDetailPlanTam.isEmpty()) {
             listDetailPlanTam.clear();
         }
         response.sendRedirect("/Plan/index");
@@ -119,7 +130,7 @@ public class PlanServlet extends HttpServlet {
         HttpSession session = request.getSession();
         try {
             Plan plan = new Plan();
-            User chuShop= (User) session.getAttribute("sessionUser");
+            User chuShop = (User) session.getAttribute("sessionUser");
             Shop shop = this.shopDao.findByIDchuCH(chuShop.getId());
             BeanUtils.populate(plan, request.getParameterMap());
             plan.setIdCuaHang(shop);
@@ -139,27 +150,6 @@ public class PlanServlet extends HttpServlet {
         }
     }
 
-    private void sup(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String strid = request.getParameter("id");
-        int id = Integer.parseInt(strid);
-        int check = 0;
-        DetailPlan entity = new DetailPlan();
-        if (listDetailPlanTam.size() > 0) {
-            for (DetailPlan ct : this.listDetailPlanTam) {
-                if (ct.getIdDrug().getId() == id) {
-                    ct.setQuantity(ct.getQuantity() - 1);
-                    if (ct.getQuantity() <= 0) {
-                        check++;
-                        entity = ct;
-                    }
-                }
-            }
-        }
-        if (check != 0) {
-            this.listDetailPlanTam.remove(entity);
-        }
-        response.sendRedirect("/Plan/index");
-    }
 
     private void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -177,5 +167,67 @@ public class PlanServlet extends HttpServlet {
             response.sendRedirect("/Plan/index");
             e.printStackTrace();
         }
+    }
+
+    private void show(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        double tong = 0;
+        List<Plan> planList = this.planDao.findAll();
+        for (Plan plan : planList) {
+            List<DetailPlan> detailPlans = this.detailPlanDao.findByIDPlan(plan.getId());
+            for (DetailPlan detail : detailPlans) {
+                tong += detail.getQuantity() * detail.getIdDrug().getPrice();
+            }
+        }
+        request.setAttribute("tong", tong);
+        request.setAttribute("planList", planList);
+        request.setAttribute("view", "/views/plan/show.jsp");
+        request.getRequestDispatcher("/views/layout.jsp").forward(request, response);
+    }
+
+    private void showDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        List<DetailPlan> detailPlans = this.detailPlanDao.findByIDPlan(id);
+        request.setAttribute("detailPlans", detailPlans);
+        request.setAttribute("view", "/views/plan/detail.jsp");
+        request.getRequestDispatcher("/views/layout.jsp").forward(request, response);
+    }
+
+    private void updateSL(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String s = request.getParameter("soLuong");
+        int id = Integer.parseInt(request.getParameter("id"));
+        DetailPlan planDetail = this.detailPlanDao.findById(id);
+        planDetail.setQuantity(Integer.parseInt(s));
+        this.detailPlanDao.update(planDetail);
+        response.sendRedirect("/Plan/showDetail");
+    }
+
+    protected void confirm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        int id = Integer.parseInt(request.getParameter("id"));
+        Plan plan = planDao.findById(id);
+        plan.setStatus(2);
+        try {
+            this.planDao.update(plan);
+            session.setAttribute("message", "Xác Nhận " + plan.getName() + " " + plan.getIdCuaHang().getName() + "Thành Công");
+        } catch (Exception e) {
+            session.setAttribute("error", "Xác Nhận " + plan.getName() + " " + plan.getIdCuaHang().getName() + "Thất Bại");
+            e.printStackTrace();
+        }
+        response.sendRedirect("/Plan/show");
+    }
+
+    protected void cancel(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        int id = Integer.parseInt(request.getParameter("id"));
+        Plan plan = planDao.findById(id);
+        plan.setStatus(3);
+        try {
+            this.planDao.update(plan);
+            session.setAttribute("message", "Hủy " + plan.getName() + " " + plan.getIdCuaHang().getName() + "Thành Công");
+        } catch (Exception e) {
+            session.setAttribute("error", "Hủy " + plan.getName() + " " + plan.getIdCuaHang().getName() + "Thất Bại");
+            e.printStackTrace();
+        }
+        response.sendRedirect("/Plan/show");
     }
 }

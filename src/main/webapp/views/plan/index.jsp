@@ -91,6 +91,7 @@
                     <th>Tên Kế Hoạch</th>
                     <th>Thuốc</th>
                     <th>Ghi Chú</th>
+                    <th>Trạng Thái</th>
                     </thead>
                     <tbody>
                     <c:forEach items="${dsPlan}" var="plan" varStatus="status">
@@ -105,31 +106,20 @@
                         </td>
                         <td>${plan.content}</td>
                         <td>
-                            <button data-toggle="modal" data-target="#b${plan.id}" class="btn btn-danger">Xóa</button>
+                            <c:choose>
+                                <c:when test="${plan.status==1}">
+                                    <p style="color:#0a58ca">Chờ Xử Lý</p>
+                                </c:when>
+                                <c:when test="${plan.status==2}"><p style="color:#0c4128"></p>Đã Xác Nhận</c:when>
+                                <c:when test="${plan.status==3}"><p style="color: red">Đã Hủy</p></c:when>
+                                <c:otherwise>-</c:otherwise>
+                            </c:choose>
                         </td>
-                        <div id="b${plan.id}" class="modal" tabindex="-1">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h3 class="modal-title">Xác nhận</h3>
-                                        <button type="button" class="btn-close" data-dismiss="modal"
-                                                aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <h5>Bạn muốn xóa Kế Hoạch ${plan.id} ?</h5>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <form action="/Plan/delete" method="post">
-                                            <input type="hidden" value="${plan.id}" name="id">
-                                            <button class="btn btn-danger">Xóa</button>
-                                        </form>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                                                aria-label="Close">Hủy
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <td>
+                            <c:if test="${plan.status==1}">
+                            <button data-toggle="modal" data-target="#e${plan.id}" class="btn btn-danger">Xóa</button>
+                        </td>
+                        </c:if>
                     </tr>
                     </c:forEach>
                     </tbody>

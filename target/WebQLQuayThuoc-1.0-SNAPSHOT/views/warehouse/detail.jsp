@@ -46,7 +46,7 @@
                         <td>
                                 ${ct.quantity}
                         </td>
-                        <td><fmt:formatNumber value="${ct.idDrug.price}" pattern="#,###"/></td>
+                        <td><fmt:formatNumber value="${ct.idDrug.price}" pattern="#,###"/> VND</td>
                         <td><fmt:formatDate value="${ct.dateAdded}" pattern="dd/MM/yyyy"/></td>
                         <td><fmt:formatDate value="${ct.dateEnd}" pattern="dd/MM/yyyy"/></td>
                     </tr>

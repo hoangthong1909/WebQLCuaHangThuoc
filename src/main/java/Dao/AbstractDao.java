@@ -38,7 +38,7 @@ public class AbstractDao<T> {
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT o FROM ").append(entityName).append(" o");
         if (exitsisStatus == 1) {
-            sql.append(" WHERE status =1");
+            sql.append(" WHERE status !=0");
         }
         TypedQuery<T> query = em.createQuery(sql.toString(), clazz);
         return query.getResultList();

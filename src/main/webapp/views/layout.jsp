@@ -6,6 +6,9 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -17,13 +20,13 @@
     <meta name="viewport" content="width=device-width" />
     <!-- Bootstrap core CSS     -->
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
-<%--    <link href="../css/bootstrap.min.css" rel="stylesheet" />--%>
 
     <!-- Animation library for notifications   -->
     <link href="../assets/css/animate.min.css" rel="stylesheet"/>
 
     <!--  Light Bootstrap Table core CSS    -->
     <link href="../assets/css/light-bootstrap-dashboard.css?v=1.4.0" rel="stylesheet"/>
+    <link href="../assets/css/light-bootstrap-dashboard.css?v=2.0.0 " rel="stylesheet" />
 
 
     <!--  CSS for Demo Purpose, don't include it in your project     -->
@@ -37,56 +40,251 @@
 
 </head>
 <body>
+<c:forEach items="${ds}" var="user">
+    <!-- Mini Modal -->
+    <div class="modal fade modal-mini modal-primary" id="a${user.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header justify-content-center">
+                    <div class="modal-profile">
+                        Xác Nhận
+                    </div>
+                </div>
+                <div class="modal-body ">
+                    <h5>Bạn muốn xóa người dùng ${user.name} ?</h5>
+                </div>
+                <div class="modal-footer">
+                    <form action="/User/delete" method="post">
+                        <input type="hidden" value="${user.id}" name="id">
+                        <button class="btn btn-success">Xóa</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Hủy</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  End Modal -->
+</c:forEach>
+<c:forEach items="${ds}" var="drug">
+<div id="b${drug.id}" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Xác nhận</h3>
+            </div>
+            <div class="modal-body">
+                <h5>Bạn muốn xóa ${drug.name} ?</h5>
+            </div>
+            <div class="modal-footer">
+                <form action="/Drug/delete" method="post">
+                    <input type="hidden" value="${drug.id}" name="id">
+                    <button class="btn btn-success">Xóa</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal"
+                        aria-label="Close">Hủy
+                </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</c:forEach>
+<c:forEach items="${ds}" var="shop">
+<div id="c${shop.id}" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Xác nhận</h3>
+                <button type="button" class="btn-close" data-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5>Bạn muốn xóa ${shop.name} ?</h5>
+            </div>
+            <div class="modal-footer">
+                <form action="/Shop/delete" method="post">
+                    <input type="hidden" value="${shop.id}" name="id">
+                    <button class="btn btn-danger">Xóa</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        aria-label="Close">Hủy
+                </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</c:forEach>
+<c:forEach items="${dsWarehouse}" var="warehouse" varStatus="status">
+<div id="d${warehouse.id}" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Xác nhận</h3>
+            </div>
+            <div class="modal-body">
+                <h5>Bạn muốn xóa Mã Kho CH${warehouse.id} ?</h5>
+            </div>
+            <div class="modal-footer">
+                <form action="/Warehouse/delete" method="post">
+                    <input type="hidden" value="${warehouse.id}" name="id">
+                    <button class="btn btn-danger">Xóa</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        aria-label="Close">Hủy
+                </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</c:forEach>
+<c:forEach items="${dsPlan}" var="plan" varStatus="status">
+<div id="e${plan.id}" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Xác nhận</h3>
+                <button type="button" class="btn-close" data-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5>Bạn muốn xóa Kế Hoạch ${plan.name} ?</h5>
+            </div>
+            <div class="modal-footer">
+                <form action="/Plan/delete" method="post">
+                    <input type="hidden" value="${plan.id}" name="id">
+                    <button class="btn btn-danger">Xóa</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        aria-label="Close">Hủy
+                </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</c:forEach>
+<!-- Mini Modal -->
+<c:forEach items="${planList}" var="planList" varStatus="status">
+<div class="modal fade modal-mini modal-primary" id="ea${planList.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <div class="modal-profile">
+                    <i class="nc-icon nc-bulb-63"></i>
+                </div>
+            </div>
+            <div class="modal-body text-center">
+                <p>Xác Nhận ${planList.name} Của ${planList.idCuaHang.name} </p>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-success" href="/Plan/confirm?id=${planList.id}">Xác Nhận</a>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  End Modal -->
+<!-- Mini Modal -->
+<div class="modal fade modal-mini modal-primary" id="eb${planList.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <div class="modal-profile">
+                    <i class="nc-icon nc-bulb-63"></i>
+                </div>
+            </div>
+            <div class="modal-body text-center">
+                <p>Xác Nhận Hủy ${planList.name} Của ${planList.idCuaHang.name} </p>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-success" href="/Plan/cancel?id=${planList.id}">Xác Nhận</a>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+</c:forEach>
+<c:forEach items="${detailPlans}" var="ct" varStatus="status">
+    <div id="ec${ct.id}" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Xác nhận</h3>
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="soLuong">
+                </div>
+                <div class="modal-footer">
+                    <form action="/Plan/updateSL" method="post">
+                        <input type="hidden" value="${ct.id}" name="id">
+                        <button class="btn btn-success">Cập Nhât</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            aria-label="Close">Hủy
+                    </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<div class="wrapper">
+</c:forEach>
+
+    <div class="wrapper">
     <div class="sidebar" data-color="blue" data-image="assets/img/sidebar-5.jpg">
-
         <!--
-
             Tip 1: you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple"
             Tip 2: you can also add an image using data-image tag
-
         -->
-
         <div class="sidebar-wrapper">
             <div class="logo">
                 <a href="http://www.creative-tim.com" class="simple-text">
                     Drug store manager
                 </a>
             </div>
-
             <ul class="nav">
-                <li class="active">
+                <li class="
+                    <c:if test="${uri==1}">
+                        active
+                    </c:if>">
                     <a href="/User/index">
                         <i class="pe-7s-user"></i>
-                        <p>User</p>
+                        <p>Users</p>
                     </a>
                 </li>
-                <li>
+                <li class="
+                    <c:if test="${uri==2}">
+                        active
+                    </c:if>">
                     <a href="/Shop/index">
                         <i class="pe-7s-graph"></i>
                         <p>Shop</p>
                     </a>
                 </li>
-                <li>
-                    <a href="#">
+                <li class="<c:if test="${uri==3}">
+                        active
+                    </c:if>">
+                    <a href="/Bill/index">
                         <i class="pe-7s-note2"></i>
                         <p>Bill</p>
                     </a>
                 </li>
-                <li>
+                <li class="<c:if test="${uri==4}">
+                        active
+                    </c:if>">
                     <a href="/Plan/index">
                         <i class="pe-7s-news-paper"></i>
                         <p>Plan</p>
                     </a>
                 </li>
-                <li>
+                <li class="<c:if test="${uri==5}">
+                        active
+                    </c:if>">
                     <a href="/Warehouse/index">
                         <i class="pe-7s-science"></i>
                         <p>Warehouse</p>
                     </a>
                 </li>
-                <li>
+                <li class="<c:if test="${uri==6}">
+                        active
+                    </c:if>">
                     <a href="/Drug/index">
                         <i class="pe-7s-drop"></i>
                         <p>Drug</p>
@@ -102,6 +300,11 @@
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
+                            <a href="">
+                                <p>Account</p>
+                            </a>
+                        </li>
+                        <li>
                             <a href="/signout">
                                 <p>Log out</p>
                             </a>
@@ -116,8 +319,6 @@
             <jsp:include page="${view}"></jsp:include>
             <jsp:include page="${view1}"></jsp:include>
         </div>
-
-
 
         <footer class="footer">
             <div class="container-fluid">
@@ -145,9 +346,6 @@
                         </li>
                     </ul>
                 </nav>
-                <p class="copyright pull-right">
-                    &copy; <script>document.write(new Date().getFullYear())</script> <a href="http://www.creative-tim.com">Creative Tim</a>, made with love for a better web
-                </p>
             </div>
         </footer>
 
@@ -176,5 +374,6 @@
 <!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
 <script src="../assets/js/demo.js"></script>
 
+<script src="../assets/js/plugins/bootstrap-switch.js"></script>
 
 </html>

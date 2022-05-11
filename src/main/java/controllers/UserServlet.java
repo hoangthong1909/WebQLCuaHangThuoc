@@ -67,7 +67,7 @@ public class UserServlet extends HttpServlet {
             List<User> list = this.dao.findAll();
             request.setAttribute("ds", list);
         } else if (user.getIsAdmin() == 1) {
-            List<User> list = this.dao.findByUserCH(user.getId());
+            List<User> list = this.dao.findByUserLock(user.getId());
             request.setAttribute("ds", list);
         }
     }

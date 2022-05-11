@@ -75,29 +75,6 @@
                         <td>
                             <button class="btn btn-danger" data-toggle="modal" data-target="#a${user.id}">Xóa</button>
                         </td>
-                        <div id="a${user.id}" class="modal" tabindex="-1">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h3 class="modal-title">Xác nhận</h3>
-                                        <button type="button" class="btn-close" data-dismiss="modal"
-                                                aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <h5>Bạn muốn xóa người dùng ${user.name} ?</h5>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <form action="/User/delete" method="post">
-                                            <input type="hidden" value="${user.id}" name="id">
-                                            <button class="btn btn-danger">Xóa</button>
-                                        </form>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                                                aria-label="Close">Hủy
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <c:if test="${user.status==1 && user.isAdmin==1 && sessionScope.sessionUser.isAdmin ==0}">
                         <td>
                             <form action="/User/lock" method="post">

@@ -28,5 +28,8 @@ public class DetailPlan {
     @Column(name = "quantity")
     private Integer quantity;
 
-
+    @Override
+    public String toString() {
+        return "DetailPlan{}";
+    }
 }

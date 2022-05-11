@@ -56,29 +56,6 @@
                         <td>
                             <button class="btn btn-danger" data-toggle="modal" data-target="#b${drug.id}">Xóa</button>
                         </td>
-                        <div id="b${drug.id}" class="modal" tabindex="-1">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h3 class="modal-title">Xác nhận</h3>
-                                        <button type="button" class="btn-close" data-dismiss="modal"
-                                                aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <h5>Bạn muốn xóa ${drug.name} ?</h5>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <form action="/Drug/delete" method="post">
-                                            <input type="hidden" value="${drug.id}" name="id">
-                                            <button class="btn btn-danger">Xóa</button>
-                                        </form>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                                                aria-label="Close">Hủy
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </tr>
                     </c:forEach>
                     </tbody>
