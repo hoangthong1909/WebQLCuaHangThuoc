@@ -3,6 +3,7 @@ package controllers;
 import Dao.*;
 import entitys.*;
 import org.apache.commons.beanutils.BeanUtils;
+import utils.DateUtil;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -60,13 +61,25 @@ public class WarehouseServlet extends HttpServlet {
     }
 
     private void index(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Drug> drugList = this.drugDao.findAll();
-        List<Warehouse> listWarehouse = this.warehouseDao.findAll();
-        request.setAttribute("drugList", drugList);
-        request.setAttribute("dsWarehouse", listWarehouse);
-        request.setAttribute("listDetailWarehouseTam", this.listDetailWarehouseTam);
+        listAll(request, response);
         request.setAttribute("view", "/views/warehouse/index.jsp");
         request.getRequestDispatcher("/views/layout.jsp").forward(request, response);
+    }
+    private void listAll(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Drug> drugList = this.drugDao.findAll();
+        request.setAttribute("drugList", drugList);
+        HttpSession session=request.getSession();
+        User user= (User) session.getAttribute("sessionUser");
+        if (user.getIsAdmin()==1){
+            Shop shop=this.shopDao.findByIDchuCH(user.getId());
+            List<Warehouse> listWarehouse = this.warehouseDao.findByWarehouseCH(shop.getId());
+            request.setAttribute("dsWarehouse", listWarehouse);
+        }else if (user.getIsAdmin()==2){
+            Shop shop=this.shopDao.findByIDchuCH(user.getUserAdd());
+            List<Warehouse> listWarehouse = this.warehouseDao.findByWarehouseCH(shop.getId());
+            request.setAttribute("dsWarehouse", listWarehouse);
+        }
+        request.setAttribute("listDetailWarehouseTam", this.listDetailWarehouseTam);
     }
 
     private void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -120,7 +133,7 @@ public class WarehouseServlet extends HttpServlet {
             for (DetailedWarehouse detailedWarehouse : this.listDetailWarehouseTam) {
                 detailedWarehouse.setIdWarehouse(soHD);
                 detailedWarehouse.setDateAdded(new Date(new java.util.Date().getTime()));
-                detailedWarehouse.setDateAdded(new Date(new java.util.Date().getTime()+detailedWarehouse.getIdDrug().getTerm()));
+                detailedWarehouse.setDateEnd(DateUtil.addDays(new java.util.Date(),detailedWarehouse.getIdDrug().getTerm()));
                 this.detailedWarehouseDao.create(detailedWarehouse);
             }
             session.setAttribute("message", "Thêm Mới Thành Công");

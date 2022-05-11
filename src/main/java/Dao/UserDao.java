@@ -1,5 +1,6 @@
 package Dao;
 
+import entitys.Shop;
 import entitys.User;
 
 import javax.persistence.TypedQuery;
@@ -26,5 +27,11 @@ public class UserDao extends AbstractDao<User> implements DaoInterface<User>{
     public User findByPhone(String phone){
         String jpql = "SELECT o FROM User o Where o.sdt =?0";
         return super.findOne(User.class,jpql,phone);
+    }
+    public List<User> findByUserCH(Integer id) {
+        return super.findMany(User.class, "SELECT obj from User obj where obj.id= ?0", id);
+    }
+    public List<User> findByUserLock(Integer id) {
+        return super.findMany(User.class, "SELECT obj from User obj where obj.userAdd= ?0", id);
     }
 }

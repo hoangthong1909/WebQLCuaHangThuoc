@@ -17,7 +17,7 @@
     <meta name="viewport" content="width=device-width" />
     <!-- Bootstrap core CSS     -->
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../css/bootstrap.min.css" rel="stylesheet" />
+<%--    <link href="../css/bootstrap.min.css" rel="stylesheet" />--%>
 
     <!-- Animation library for notifications   -->
     <link href="../assets/css/animate.min.css" rel="stylesheet"/>
@@ -57,13 +57,13 @@
 
             <ul class="nav">
                 <li class="active">
-                    <a href="#">
+                    <a href="/User/index">
                         <i class="pe-7s-user"></i>
-                        <p>Users</p>
+                        <p>User</p>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="/Shop/index">
                         <i class="pe-7s-graph"></i>
                         <p>Shop</p>
                     </a>
@@ -75,19 +75,19 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="/Plan/index">
                         <i class="pe-7s-news-paper"></i>
-                        <p>Pane</p>
+                        <p>Plan</p>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="/Warehouse/index">
                         <i class="pe-7s-science"></i>
                         <p>Warehouse</p>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="/Drug/index">
                         <i class="pe-7s-drop"></i>
                         <p>Drug</p>
                     </a>
@@ -102,12 +102,7 @@
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <a href="">
-                                <p>Account</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
+                            <a href="/signout">
                                 <p>Log out</p>
                             </a>
                         </li>
@@ -181,21 +176,5 @@
 <!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
 <script src="../assets/js/demo.js"></script>
 
-<script type="text/javascript">
-    $(document).ready(function(){
-
-        demo.initChartist();
-
-        $.notify({
-            icon: 'pe-7s-gift',
-            message: "Welcome to <b>Erione</b> - a beautiful freebie for every web developer."
-
-        },{
-            type: 'info',
-            timer: 4000
-        });
-
-    });
-</script>
 
 </html>

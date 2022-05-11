@@ -1,5 +1,6 @@
 package Dao;
 
+import entitys.Plan;
 import entitys.Warehouse;
 
 import java.util.List;
@@ -13,5 +14,9 @@ public class warehouseDao extends AbstractDao<Warehouse> implements DaoInterface
     @Override
     public List<Warehouse> findAll() {
         return super.findAll(Warehouse.class,1);
+    }
+
+    public List<Warehouse> findByWarehouseCH(Integer id) {
+        return super.findMany(Warehouse.class, "SELECT obj from Warehouse obj where obj.status=1 AND obj.idShop.id= ?0", id);
     }
 }

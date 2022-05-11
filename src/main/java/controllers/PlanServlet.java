@@ -55,13 +55,25 @@ public class PlanServlet extends HttpServlet {
     }
 
     private void index(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Drug> drugList = this.drugDao.findAll();
-        List<Plan> listPlan = this.planDao.findAll();
-        request.setAttribute("drugList", drugList);
-        request.setAttribute("dsPlan", listPlan);
-        request.setAttribute("listDetailPlanTam", this.listDetailPlanTam);
+        listAll(request, response);
         request.setAttribute("view", "/views/plan/index.jsp");
         request.getRequestDispatcher("/views/layout.jsp").forward(request, response);
+    }
+    private void listAll(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Drug> drugList = this.drugDao.findAll();
+        request.setAttribute("drugList", drugList);
+        HttpSession session=request.getSession();
+        User user= (User) session.getAttribute("sessionUser");
+        if (user.getIsAdmin()==1){
+            Shop shop=this.shopDao.findByIDchuCH(user.getId());
+            List<Plan> listPlan = this.planDao.findByPlanCH(shop.getId());
+            request.setAttribute("dsPlan", listPlan);
+        }else if (user.getIsAdmin()==2){
+            Shop shop=this.shopDao.findByIDchuCH(user.getUserAdd());
+            List<Plan> listPlan = this.planDao.findByPlanCH(shop.getId());
+            request.setAttribute("dsPlan", listPlan);
+        }
+        request.setAttribute("listDetailPlanTam", this.listDetailPlanTam);
     }
 
     private void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

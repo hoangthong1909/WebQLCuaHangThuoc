@@ -31,12 +31,14 @@
                 </c:if>
                 <table class="table table-hover table-striped">
                     <thead>
-                    <th>Loại Thuốc</th>
+                    <th>Họ Tên</th>
                     <th>Điện Thoại</th>
                     <th>Email</th>
                     <th>Ngày Sinh</th>
                     <th>Giới Tính</th>
+                    <c:if test="${sessionScope.sessionUser.isAdmin==0}">
                     <th>Quyền</th>
+                    </c:if>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -55,14 +57,15 @@
                                 <c:otherwise>-</c:otherwise>
                             </c:choose>
                         </td>
+                        <c:if test="${sessionScope.sessionUser.isAdmin==0}">
                         <td>
                             <c:choose>
                                 <c:when test="${user.isAdmin==0}">Super Admin</c:when>
                                 <c:when test="${user.isAdmin==1}">Admin</c:when>
-                                <c:when test="${user.isAdmin==2}">User</c:when>
                                 <c:otherwise>-</c:otherwise>
                             </c:choose>
                         </td>
+                        </c:if>
                         <td>
                             <form action="/User/edit" method="post">
                                 <input type="hidden" value="${user.id}" name="id">
@@ -95,7 +98,7 @@
                                 </div>
                             </div>
                         </div>
-                        <c:if test="${user.status==1}">
+                        <c:if test="${user.status==1 && user.isAdmin==1 && sessionScope.sessionUser.isAdmin ==0}">
                         <td>
                             <form action="/User/lock" method="post">
                                 <input type="hidden" value="${user.id}" name="id">
@@ -103,7 +106,7 @@
                             </form>
                         </td>
                         </c:if>
-                        <c:if test="${user.status==2}">
+                        <c:if test="${user.status==2 && user.isAdmin==1  && sessionScope.sessionUser.isAdmin ==0}">
                         <td>
                             <form action="/User/unlock" method="post">
                                 <input type="hidden" value="${user.id}" name="id">

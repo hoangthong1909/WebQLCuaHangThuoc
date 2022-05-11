@@ -42,12 +42,6 @@
 
                 </div>
             </div>
-            <div class="mb-3 col-12">
-                <lable>Tên Kế Hoạch</lable>
-                <input type="text" class="form-control" name="name" >
-                <lable>Ghi Chú</lable>
-                <textarea class="form-control" name="content" rows="2"></textarea>
-            </div>
             <button type="submit" class="btn btn-info btn-fill ">Thêm Vào Kho</button>
     </form>
     </div>

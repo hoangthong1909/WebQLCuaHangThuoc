@@ -43,6 +43,9 @@ public class User {
     @Column(name = "status")
     private Integer status;
 
+    @Column(name = "userAdd")
+    private Integer userAdd;
+
     public Integer getId() {
         return id;
     }

@@ -54,22 +54,38 @@ public class ShopServlet extends HttpServlet {
     }
 
     protected void create(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<User> dsChuCH=this.userDao.findChuCH();
-        request.setAttribute("dsChuCH",dsChuCH);
-        List<Shop> list = this.shopDao.findAll();
-        request.setAttribute("ds", list);
+        listALl(request, response);
         request.setAttribute("view", "/views/shop/create.jsp");
         request.setAttribute("view1", "/views/shop/index.jsp");
         request.getRequestDispatcher("/views/layout.jsp").forward(request, response);
+    }
+    protected void listALl(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session=request.getSession();
+        List<User> dsChuCH = this.userDao.findChuCH();
+        List<Shop> list = this.shopDao.findAll();
+        User t=new User();
+        for (Shop s : list) {
+            for (User u : dsChuCH) {
+                if (s.getIdChuCH().getId()==u.getId()) {
+                    t=u;
+                }
+            }
+        dsChuCH.remove(t);
+        }
+        if (dsChuCH.isEmpty()){
+            session.setAttribute("error","Vui Lòng Thêm Mới Chủ Cửa Hàng");
+        }
+        request.setAttribute("dsChuCH", dsChuCH);
+        request.setAttribute("ds", list);
     }
 
 
     protected void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         String s = request.getParameter("id");
-        int idChuCH= Integer.parseInt(request.getParameter("idchu"));
+        int idChuCH = Integer.parseInt(request.getParameter("idchu"));
         try {
-            User chuCH=this.userDao.findById(idChuCH);
+            User chuCH = this.userDao.findById(idChuCH);
             int id = Integer.parseInt(s);
             Shop before = this.shopDao.findById(id);
             Shop entity = new Shop();
@@ -106,20 +122,16 @@ public class ShopServlet extends HttpServlet {
 
     protected void store(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        int idChuCH= Integer.parseInt(request.getParameter("idchu"));
+        int idChuCH = Integer.parseInt(request.getParameter("idchu"));
         Shop entity = new Shop();
-        List<Shop> list = new ArrayList<>();
         try {
-            User chuCH=this.userDao.findById(idChuCH);
+            User chuCH = this.userDao.findById(idChuCH);
             BeanUtils.populate(entity, request.getParameterMap());
             entity.setIdChuCH(chuCH);
             entity.setStatus(1);
             this.shopDao.create(entity);
+            listALl(request, response);
             session.setAttribute("message", "Thêm Mới Thành Công");
-            list.add(entity);
-            request.setAttribute("ds", list);
-            List<Shop> all = this.shopDao.findAll();
-            request.setAttribute("ds", all);
             response.sendRedirect("/Shop/index");
         } catch (Exception e) {
             e.printStackTrace();
@@ -130,8 +142,8 @@ public class ShopServlet extends HttpServlet {
     }
 
     protected void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<User> dsChuCH=this.userDao.findChuCH();
-        request.setAttribute("dsChuCH",dsChuCH);
+        List<User> dsChuCH = this.userDao.findChuCH();
+        request.setAttribute("dsChuCH", dsChuCH);
         String s = request.getParameter("id");
         int id = Integer.parseInt(s);
         Shop entity = this.shopDao.findById(id);

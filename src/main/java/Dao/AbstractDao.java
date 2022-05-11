@@ -48,7 +48,17 @@ public class AbstractDao<T> {
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT o FROM ").append(entityName).append(" o");
         if (exitsisStatus == 1) {
-            sql.append(" WHERE status =1 Or status=2");
+            sql.append(" WHERE status !=0 AND isAdmin !=2");
+        }
+        TypedQuery<T> query = em.createQuery(sql.toString(), clazz);
+        return query.getResultList();
+    }
+    public List<T> findUser(Class<T> clazz, Integer exitsisStatus) {
+        String entityName = clazz.getSimpleName();// lấy tên của class
+        StringBuffer sql = new StringBuffer();
+        sql.append("SELECT o FROM ").append(entityName).append(" o");
+        if (exitsisStatus == 1) {
+            sql.append(" WHERE isAdmin =2 AND status=1");
         }
         TypedQuery<T> query = em.createQuery(sql.toString(), clazz);
         return query.getResultList();
