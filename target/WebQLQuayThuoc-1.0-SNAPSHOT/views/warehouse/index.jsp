@@ -112,9 +112,6 @@
                                 <button class="btn btn-warning">Xem chi tiết</button>
                             </form>
                         </td>
-                        <td>
-                            <button data-toggle="modal" data-target="#d${warehouse.id}" class="btn btn-danger">Xóa</button>
-                        </td>
                     </tr>
                     </c:forEach>
                     </tbody>

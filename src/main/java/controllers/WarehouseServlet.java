@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@WebServlet({"/Warehouse/index", "/Warehouse/remove", "/Warehouse/sup", "/Warehouse/show", "/Warehouse/create", "/Warehouse/store", "/Warehouse/edit", "/Warehouse/update", "/Warehouse/delete",})
+@WebServlet({"/Warehouse/index", "/Warehouse/remove", "/Warehouse/sup", "/Warehouse/show", "/Warehouse/create", "/Warehouse/store", "/Warehouse/edit", "/Warehouse/update",})
 public class WarehouseServlet extends HttpServlet {
     private drugDao drugDao;
     private warehouseDao warehouseDao;
@@ -54,8 +54,6 @@ public class WarehouseServlet extends HttpServlet {
         String uri = request.getRequestURI();
         if (uri.contains("store")) {
             store(request, response);
-        } else if (uri.contains("delete")) {
-            delete(request, response);
         } else if (uri.contains("show")) {
             this.show(request, response);
         }
@@ -209,23 +207,6 @@ public class WarehouseServlet extends HttpServlet {
         response.sendRedirect("/Warehouse/index");
     }
 
-    private void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        String s = request.getParameter("id");
-        int id = Integer.parseInt(s);
-        try {
-            Warehouse entity = this.warehouseDao.findById(id);
-            List<DetailedWarehouse> listCT = entity.getEntityList();
-            this.detailedWarehouseDao.deleteList(listCT);
-            this.warehouseDao.delete(entity);
-            session.setAttribute("message", "Xóa Thành Công");
-            response.sendRedirect("/Warehouse/index");
-        } catch (Exception e) {
-            session.setAttribute("error", "Xóa Thất Bại");
-            response.sendRedirect("/Warehouse/index");
-            e.printStackTrace();
-        }
-    }
 
     private void show(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
